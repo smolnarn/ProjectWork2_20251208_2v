@@ -41,8 +41,15 @@ Tesco_Selenium/
 
 ## Setup Instructions
 
-1. Ensure Java 21 is installed
-2. Install Maven (if not already installed)
+1. Ensure Java 21 is installed and configured
+   - Check Java version: `java -version`
+   - If Java 21 is not installed, download it from [Oracle](https://www.oracle.com/java/technologies/downloads/#java21) or [Eclipse Adoptium](https://adoptium.net/)
+   - Set `JAVA_HOME` environment variable to point to Java 21 installation
+2. Maven is installed and configured
+   - Maven 3.9.4 is installed at: `C:\Users\<username>\apache-maven`
+   - Maven bin directory is added to user PATH
+   - Verify Maven: `mvn -version`
+   - **Note**: If you see Java 17 in Maven version output, ensure `JAVA_HOME` points to Java 21
 3. Clone/download the project
 4. Run `mvn clean install` to download dependencies
 5. Run tests with `mvn test`
