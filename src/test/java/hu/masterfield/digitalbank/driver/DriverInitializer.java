@@ -1,4 +1,4 @@
-package com.tesco.driver;
+package hu.masterfield.digitalbank.driver;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -6,7 +6,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-import static com.tesco.driver.BrowserType.*;
+import static hu.masterfield.digitalbank.driver.BrowserType.*;
 
 public class DriverInitializer {
 
@@ -53,3 +53,4 @@ public class DriverInitializer {
 
     }
 }
+

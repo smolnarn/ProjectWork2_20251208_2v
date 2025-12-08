@@ -1,4 +1,4 @@
-package com.tesco;
+package hu.masterfield.digitalbank;
 
 import org.junit.platform.suite.api.ConfigurationParameter;
 import org.junit.platform.suite.api.IncludeEngines;
@@ -12,7 +12,7 @@ import static io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME;
 @IncludeEngines("cucumber")
 @SelectClasspathResource("features")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty, html:target/cucumber-report.html, json:target/cucumber-report.json")
-@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.tesco")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "hu.masterfield.digitalbank")
 public class TestRunner {
     // Empty class - configuration annotations do the work
 }

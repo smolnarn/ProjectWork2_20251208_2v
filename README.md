@@ -1,4 +1,4 @@
-# Tesco Selenium Test Automation
+# Digital Bank Selenium Test Automation
 
 ## Project Context
 
@@ -12,7 +12,7 @@ This is a test automation project using Java and Selenium with JUnit as the test
 ## Project Structure
 
 ```
-Tesco_Selenium/
+Masterfield_DigitalBank/
 ├── pom.xml
 ├── README.md
 └── src/
@@ -20,11 +20,12 @@ Tesco_Selenium/
     │   └── java/
     └── test/
         ├── java/
-        │   └── com/
-        │       └── tesco/
-        │           ├── TestRunner.java
-        │           └── stepdefinitions/
-        │               └── StepDefinitions.java
+        │   └── hu/
+        │       └── masterfield/
+        │           └── digitalbank/
+        │               ├── TestRunner.java
+        │               └── stepdefinitions/
+        │                   └── StepDefinitions.java
         └── resources/
             └── features/
                 └── example.feature
