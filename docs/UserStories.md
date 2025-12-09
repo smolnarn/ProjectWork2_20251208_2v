@@ -1,28 +1,37 @@
 ## Digital Bank user stories ##
 
-US01 – Sikertelen bejelentkezés
+US01 – Bejelentkezési folyamat kezelése
     Felhasználóként
-        fontos számomra, hogy amikor valamit nem jól adok meg bejelentkezéskor, a rendszer felhívja rá a figyelmet,
-        hogy azonnal módosíthassam.
-
-     Elfogadási feltételek (Acceptance Criteria)
-        - Üres vagy hibás mezők esetén a rendszer figyelmeztet.: 
-                "Hiba Hibás belépési adatok vagy a hozzáférés nem engedélyezett a felhasználói fiók státusza, 
-                vagy létező felhasználó munkamenet miatt."
-        - Sikertelen belépéskor a bejelentkezési oldal aktív marad.
-
-
-US02 – Sikeres belépés a rendszerbe
-    Felhasználóként
-        arra törekszem, hogy a felhasználónevemmel és jelszavammal megnyithassam a Digital Bank alkalmazást,
-        mert így teljes rálátást kapok saját pénzügyeimre.
+        fontos számomra, hogy a hitelesítő adataimmal be tudjak lépni a Digital Bank alkalmazásba, 
+        illetve megfelelő visszajelzést kapjak hibás adatok esetén,
+        mert azonosítás szükséges ahhoz, hogy hozzáférjek a pénzügyi adataimhoz.
 
     Elfogadási feltételek (Acceptance Criteria)
-        - A bejelentkezési oldalon minden szükséges mező és gomb megjelenik (felhasználónév, jelszó, emlékezzen rám, belépés).
-        - Helyes adatok bevitele után a rendszer átirányít az "Áttekintés" oldalra.
-        - A főoldalon személyre szabott üdvözlő üzenet fogad (Üdvözöljük, "name")
-        - A bal oldali menü teljes funkcionalitással elérhetővé válik. 
-                (Kezdőlap, Folyószámla, Megtakarítás, Külső, Befizetés, Kifizetés, Átutalás számlák kzött, VISA közvetlen átutalás)
+
+        - A bejelentkezési oldalon minden szükséges elem elérhető (felhasználónév, jelszó mezők, "Emlékezzen rám" opció, "Belépés" gomb).
+
+        Sikeres bejelentkezés:
+            - Helyes adatok megadása után a rendszer átirányít az "Áttekintés" (Overview) oldalra.
+            - Megjelenik a személyre szabott üdvözlő üzenet (pl. "Üdvözöljük, [Név]").
+            - A bal oldali navigációs menü teljes funkcionalitással elérhetővé válik. 
+                (Kezdőlap, Folyószámla, Megtakarítás, Külső, Befizetés, Kifizetés, Átutalás számlák között, VISA közvetlen átutalás).
+        
+        Sikertelen bejelentkezés:
+            - Ha a felhasználó hiányosan tölti ki a formot, akkor a bejelentkezés gomb megnyomását követően figyelmeztetést kap a hiányos adatokra.
+            - Ha a felhasználó nem megfelelő usernév és password kombinációt ad meg, akkor a rendszer hibaüzenettel figyelmeztet: 
+                "Hiba Hibás belépési adatok vagy a hozzáférés nem engedélyezett a felhasználói fiók státusza, 
+                vagy létező felhasználó munkamenet miatt."
+            - A sikertelen kísérlet után a felhasználó a bejelentkezési oldalon marad, és lehetősége van az adatok javítására.
+
+
+US02 - Cookie banner elfogadása
+        Felhasználóként
+             fontos nekem a magánszféra védelme, ezért új böngésző sessionben a tesztoldal megnyitásakor mindig figyelmeztető üzenetet szeretnék látni, hogy az oldal sütiket használ.
+
+        Elfogadási feltételek (Acceptance Criteria)
+            - Új böngésző sessionben megjelenik a cookie banner.
+            - Ha a felhasználó elfogadja, akkor eltűnik a cookie banner.
+        
 
 
 US03 – Pénzügyi áttekintés megjelenítése grafikonokon ("Áttekintés" oldal)
@@ -33,30 +42,10 @@ US03 – Pénzügyi áttekintés megjelenítése grafikonokon ("Áttekintés" ol
     Elfogadási feltételek (Acceptance Criteria)
         - A főoldalon megjelenik a számlaegyenleg összegző grafikon.
         - Külön grafikon mutatja a be- és kifizetések utolsó három hónapját.
-        - A kategória szerinti bontások vizuálisan elkülönülnek.
+        
         
 
-
-US04 – A "Megtakarítás" menü kezelése
-    Felhasználóként
-        szeretném, hogy a bal oldali navigációs sávban található „Megtakarítás” menü áttekinthetően működjön,
-        hogy könnyen elérjem meglévő megtakarításaim listáját, illetve új megtakarítási számlát hozhassak létre.
-
-    Elfogadási kritériumok (Acceptance Criteria)
-        - A "Megtakarítás" menü megnyitása.
-        - A „Megtakarítás” főmenü elem kattintásra megnyílik és megjeleníti az alatta található opciókat 
-                        (Megtakarítások megtekintése, Új megtakarítás).
-        - A menü újra kattintva bezárható, így a felhasználó szabályozzni tudja a menü megjelenését.
-        - „Megtakarítás megtekintése” almenü: 
-                - A kiválasztás után a rendszer a "Megtakarítási számlák megtekintése" oldalra navigál.
-                - Megjelennek a releváns adatok 
-                        (Individual Savings, Individual Savings Egyenleg, Joint Savings, Joint Savings Egyenleg, Tranzakciók).
-        - „Új megtakarítás” almenü: 
-                - Megnyílik a "Megtakarítási számla létrehozása" oldal.
-                - Az oldal minden mezőt és választható lehetőséget tartalmaz, amely a folyószámla indításához szükséges
-                        (Válassza ki a Takarékszámla típusát, Válassza ki a Számla Tulajdonjogát, Számla Neve, Kezdeti Befizetés).
-
-US05 - Új megtakarítás létrehozása
+US04 - Új megtakarítás létrehozása
     Felhasználóként
         szeretném, hogy az „Új megtakarítási számla” felületen egyszerűen megadhassam a szükséges adatokat egy új megtakarítási számla megnyitásához,
         hogy könnyen elindíthassam a megtakarítási céljaimnak megfelelő számlát a banki rendszerben.
@@ -83,7 +72,7 @@ US05 - Új megtakarítás létrehozása
                 -   A felhasználó ezt követően átirányításra kerül a megtakarítási számla részletes nézetére ("Megtakarítási számlák megtekintése" oldal).
 
 
-US06 - Létrehozott megtakarítási számla adatainak megjelenítése
+US05 - Létrehozott megtakarítási számla adatainak megjelenítése
     Felhasználóként
         szeretném, hogy egy új megtakarítási számla létrehozása után a rendszer azonnal megjelenítse a számlához tartozó részletes adatokat és a számlamozgások listáját,
         hogy ellenőrizhessem az induló egyenleget, a számla paramétereit, és a korábbi tranzakciókat.
@@ -114,7 +103,7 @@ US06 - Létrehozott megtakarítási számla adatainak megjelenítése
                 - Az egyenleg mező helyesen tükrözi az induló összeget.
 
 
-US07 – Kijelentkezés
+US06 – Kijelentkezés
     Felhasználóként
         arra számítok, hogy egyetlen kattintással lezárhatom a munkamenetemet,
         mert így a saját adataim mindig védett és tiszta térben maradnak.

@@ -1,13 +1,12 @@
-Feature: Pénzügyi áttekintés
-  Mint felhasználó
-  Szeretném látni a pénzügyi grafikonjaimat
-  Hogy átlássam a helyzetemet
+Feature: Financial Overview
+  As a user
+  I want to see my financial charts
+  So that I can understand my financial situation
 
-  Rule: Grafikonok megjelenítése a főoldalon (US03)
+  Rule: Display charts on the main page (US03)
     
-    Example: Áttekintés oldal grafikonjainak ellenőrzése
-      Given be vagyok jelentkezve
-      And az "Áttekintés" oldalon vagyok
-      Then látnom kell a számlaegyenleg összegző grafikont
-      And látnom kell a be- és kifizetések utolsó három hónapját mutató grafikont
-      And a kategória szerinti bontásoknak vizuálisan el kell különülniük
+    Scenario: Verify charts on Overview page
+      Given I am logged in
+      And I am on the "Áttekintés" page
+      Then I see the account balance summary chart
+      And I see the chart showing deposits and withdrawals for the last three months

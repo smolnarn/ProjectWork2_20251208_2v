@@ -1,33 +1,41 @@
-Feature: Bejelentkezés és Kijelentkezés
-  Mint felhasználó
-  Szeretnék be- és kijelentkezni
-  Hogy hozzáférjek a pénzügyeimhez és biztonságban tudjam őket
+Feature: Login and Logout
+  As a user
+  I want to log in and log out
+  So that I can access my finances securely
 
   Background:
-    Given a bejelentkezési oldalon vagyok
+    Given I am on the login page
 
-  Rule: Üres vagy hibás mezők esetén a rendszer figyelmeztet (US01)
+  Rule: System warns when fields are empty or incorrect (US01)
     
-    Example: Sikertelen bejelentkezés hibás jelszóval
-      When hibás felhasználónevet vagy jelszót adok meg
-      And a "Belépés" gombra kattintok
-      Then egy figyelmeztető üzenetet kell látnom: "Hiba Hibás belépési adatok vagy a hozzáférés nem engedélyezett a felhasználói fiók státusza, vagy létező felhasználó munkamenet miatt."
-      And a bejelentkezési oldalon maradok
+    Scenario: Unsuccessful login with incorrect password
+      When I enter incorrect username "<username>" and password "<password>"
+      And I submit the login form
+      Then I see an error message: "Hiba Hibás belépési adatok vagy a hozzáférés nem engedélyezett a felhasználói fiók státusza, vagy létező felhasználó munkamenet miatt."
+      And I remain on the login page
 
-  Rule: Helyes adatok bevitele után a rendszer átirányít és üdvözöl (US02)
+      Examples:
+        | username | password | 
+        | jsmith3  | wrongpassword |
+        | wrongusername  | Demo123! |
+        | jsmith3  |           |
+        |           | Demo123! |
+        |           |           |
 
-    Example: Sikeres bejelentkezés érvényes adatokkal
-      When érvényes felhasználónevet és jelszót adok meg
-      And a "Belépés" gombra kattintok
-      Then átirányításra kerülök az "Áttekintés" oldalra
-      And üdvözlő üzenetet kell látnom
-      And a bal oldali menü elérhetővé válik
+  Rule: System redirects and greets after entering correct credentials (US01)
 
-  Rule: Kijelentkezéskor a rendszer biztonságosan kiléptet (US07)
+    Scenario: Successful login with valid credentials
+      When I enter valid username "jsmith3" and password "Demo123!"
+      And I submit the login form
+      Then I am redirected to the "Áttekintés" page
+      And I see a welcome message
+      And the left side menu becomes available
 
-    Example: Kijelentkezés a menüből
-      Given be vagyok jelentkezve
-      When a kijelentkezés opciót választom
-      Then visszakerülök a bejelentkezési oldalra
-      And egy "Sikeres kilépés." üzenetet kell látnom
-      And újbóli oldalbetöltéskor ismét bejelentkezést kér a rendszer
+  Rule: System logs out securely when logging out (US06)
+
+    Scenario: Logout from menu
+      Given I am logged in
+      When I select the logout option
+      Then I am redirected to the login page
+      And I see a "Sikeres kilépés." message
+      And when I reload the page, the system requires login again
