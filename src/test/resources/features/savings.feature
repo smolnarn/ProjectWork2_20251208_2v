@@ -16,12 +16,12 @@ Feature: Savings Management
 
     Scenario: Successful account opening with valid data
       Given I am on the "Új megtakarítási számla létrehozása" page
-      When I select the "Megtakarítások" account type
-      And I select "Egyéni" ownership
-      And I enter an account name
-      And I enter a valid initial deposit amount
+      When I select "Megtakarítások" from "account type" options
+      And I select "Egyéni" from "ownership" options
+      And I enter "My Savings" into "account name" field
+      And I enter "100" into "initial deposit" field
       And I submit the form
-      Then I see a success message
+      Then I see the "success" message
       And I am redirected to the "Megtakarítási számlák megtekintése" page
 
   Rule: Display created account data and transactions (US05)
