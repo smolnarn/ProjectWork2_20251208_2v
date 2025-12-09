@@ -10,6 +10,22 @@ import static hu.masterfield.digitalbank.driver.BrowserType.*;
 
 public class DriverInitializer {
 
+    private static WebDriver driver;
+
+    public static WebDriver getDriver() {
+        if (driver == null) {
+            driver = initChrome();
+        }
+        return driver;
+    }
+
+    public static void quitDriver() {
+        if (driver != null) {
+            driver.quit();
+            driver = null;
+        }
+    }
+
     public static WebDriver initChrome() {
         return initDriver(CHROME_SELMGR);
     }

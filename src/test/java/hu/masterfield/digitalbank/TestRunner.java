@@ -14,6 +14,6 @@ import static io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME;
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty, html:target/cucumber-report.html, json:target/cucumber-report.json")
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "hu.masterfield.digitalbank")
 public class TestRunner {
-    // Empty class - configuration annotations do the work
+    
 }
 
