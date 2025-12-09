@@ -1,6 +1,7 @@
 package hu.masterfield.digitalbank.steps;
 
 import hu.masterfield.digitalbank.driver.DriverInitializer;
+import hu.masterfield.digitalbank.driver.Settings;
 import hu.masterfield.digitalbank.pages.CookieBannerPage;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -29,9 +30,7 @@ public class CookieStepDefs {
     @When("I open the test site")
     @Given("I open the test site")
     public void iOpenTheTestSite() {
-       
-        String baseUrl = System.getProperty("base.url", "http://localhost:8080");
-        driver.get(baseUrl);
+        driver.get(Settings.getBaseUrl());
     }
     
   
