@@ -103,6 +103,9 @@
                         <include>**/*Test.java</include>
                         <include>**/TestRunner.java</include>
                     </includes>
+                    <systemPropertyVariables>
+                        <cucumber.filter.tags>${cucumber.filter.tags}</cucumber.filter.tags>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>

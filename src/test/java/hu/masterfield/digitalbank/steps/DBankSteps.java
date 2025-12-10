@@ -9,11 +9,14 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -21,22 +24,33 @@ import java.time.Duration;
 public class DBankSteps {
     protected static WebDriver driver = null;
     protected static WebDriverWait wait = null;
+    protected static CookieBannerPage cookieBannerPage = null;
 
     @Before
     public static void setup() throws IOException {
+        
+        WebDriverManager.chromedriver().clearDriverCache().setup();
 
         ChromeOptions options = new ChromeOptions();
 
-        // angol nyelvű böngésző indítása
         options.addArguments("--lang=en-US");
+
+        options.addArguments("--incognito");
+
+        options.addArguments("--disable-blink-features=AutomationControlled");
+
+        options.addArguments("--disable-infobars");
 
         driver = new ChromeDriver(options);
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
         driver.manage().window().setSize(new Dimension(900, 900));
 
-        driver.get("https://eng.digitalbank.masterfield.hu/bank/home");
+        cookieBannerPage = new CookieBannerPage(driver);
+    }
 
+    protected String getPageUrl(String pageName) {
+        return "https://eng.digitalbank.masterfield.hu/bank/" + pageName;
     }
 
     @After
@@ -100,5 +114,21 @@ public class DBankSteps {
     public void iAmRedirectedToTheLoginPage() {
         // Write code here that turns the phrase above into concrete actions
         throw new PendingException();
+    }
+
+    @When("I open the {string} page")
+    public void IOpenThePage(String pageName) {
+        driver.get(getPageUrl(pageName));
+    }
+        
+    @When("I accept the cookies")
+    public void iAcceptTheCookies() {
+        cookieBannerPage.acceptCookies();
+    }
+     
+    @Then("the cookie banner disappears")
+    public void theCookieBannerDisappears() {
+        assertTrue(cookieBannerPage.isCookieBannerDisappeared(), 
+                "A cookie banner-nek el kellene tűnnie az elfogadás után");
     }
 }
