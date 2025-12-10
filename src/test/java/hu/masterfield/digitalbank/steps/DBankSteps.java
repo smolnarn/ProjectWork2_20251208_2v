@@ -5,13 +5,13 @@ import hu.masterfield.digitalbank.pages.LoginPage;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.PendingException;
+import io.cucumber.java.Scenario;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -25,9 +25,11 @@ public class DBankSteps {
     protected static WebDriver driver = null;
     protected static WebDriverWait wait = null;
     protected static CookieBannerPage cookieBannerPage = null;
+    private static Scenario scenario = null;
 
     @Before
-    public static void setup() throws IOException {
+    public void setup(Scenario scenario) throws IOException {
+        DBankSteps.scenario = scenario;
         
         WebDriverManager.chromedriver().clearDriverCache().setup();
 
@@ -54,8 +56,25 @@ public class DBankSteps {
     }
 
     @After
-    public static void cleanup() {
-        driver.quit();
+    public void cleanup(Scenario scenario) {
+        if (scenario.isFailed()) {
+            takeScreenshot("FAILED");
+        }
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
+  
+    private void takeScreenshot(String screenshotName) {
+        try {
+            if (driver != null) {
+                byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+                scenario.attach(screenshot, "image/png", screenshotName);
+            }
+        } catch (Exception e) {
+            System.out.println("Hiba a screenshot készítése során: " + e.getMessage());
+        }
     }
 
 
@@ -119,6 +138,14 @@ public class DBankSteps {
     @When("I open the {string} page")
     public void IOpenThePage(String pageName) {
         driver.get(getPageUrl(pageName));
+        takeScreenshot("Page opened: " + pageName);
+    }
+    
+    @Then("I see the cookie banner")
+    public void iSeeTheCookieBanner() {
+        assertTrue(cookieBannerPage.isCookieBannerVisible(), 
+                "A cookie banner-nek láthatónak kellene lennie");
+        takeScreenshot("Cookie banner visible");
     }
         
     @When("I accept the cookies")
@@ -130,5 +157,6 @@ public class DBankSteps {
     public void theCookieBannerDisappears() {
         assertTrue(cookieBannerPage.isCookieBannerDisappeared(), 
                 "A cookie banner-nek el kellene tűnnie az elfogadás után");
+        takeScreenshot("Cookie banner disappeared");
     }
 }
