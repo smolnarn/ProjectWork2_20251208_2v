@@ -10,10 +10,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 
-public class CookieBannerPage {
-    
-    private final WebDriverWait wait;
-    
+public class CookieBannerPage extends BasePage {
+
+    @FindBy(css = ".cc-nb-okagree")
+    WebElement okButton;
 
     @FindBy(className = "cc-nb-main-container")
     private WebElement cookieBanner;
@@ -31,8 +31,7 @@ public class CookieBannerPage {
     private WebElement cookieBannerMessage;
     
     public CookieBannerPage(WebDriver driver) {
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        PageFactory.initElements(driver, this);
+        super(driver);
     }
     
    
@@ -52,8 +51,7 @@ public class CookieBannerPage {
     
    
     public void acceptCookies() {
-        wait.until(ExpectedConditions.elementToBeClickable(acceptCookiesButton));
-        acceptCookiesButton.click();
+        okButton.click();
     }
     
    
