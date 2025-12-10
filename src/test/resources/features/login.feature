@@ -1,3 +1,4 @@
+@login
 Feature: Login and Logout
   As a user
   I want to log in and log out

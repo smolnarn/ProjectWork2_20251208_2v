@@ -47,7 +47,15 @@ public class CookieBannerPage extends BasePage {
     
    
     public void acceptCookies() {
-        okButton.click();
+        try {
+            if (isCookieBannerVisible()) {
+                wait.until(ExpectedConditions.elementToBeClickable(okButton));
+                okButton.click();
+                waitForCookieBannerToDisappear();
+            }
+        } catch (Exception e) {
+            System.out.println("Cookie banner not present or already accepted");
+        }
     }
     
    
