@@ -46,7 +46,7 @@ public class DBankSteps {
         driver = new ChromeDriver(options);
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        driver.manage().window().setSize(new Dimension(900, 900));
+        driver.manage().window().maximize();
 
         cookieBannerPage = new CookieBannerPage(driver);
     }

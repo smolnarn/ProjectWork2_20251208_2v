@@ -8,14 +8,14 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class CookieBannerPage extends BasePage {
 
-    @FindBy(css = ".cc-nb-okagree")
-    WebElement okButton;
+    //@FindBy(css = ".cc-nb-okagree")
+    //WebElement okButton;
 
     @FindBy(className = "cc-nb-main-container")
     private WebElement cookieBanner;
     
     @FindBy(className = "cc-nb-okagree")
-    private WebElement acceptCookiesButton;
+    private WebElement okButton;
     
     @FindBy(className = "cc-nb-changep")
     private WebElement changeSettingsButton;
@@ -84,9 +84,9 @@ public class CookieBannerPage extends BasePage {
         return cookieBannerMessage.getText();
     }
    
-    public boolean isAcceptButtonVisible() {
+    public boolean isOkButtonVisible() {
         try {
-            return acceptCookiesButton.isDisplayed() && acceptCookiesButton.isEnabled();
+            return okButton.isDisplayed() && okButton.isEnabled();
         } catch (Exception e) {
             return false;
         }
