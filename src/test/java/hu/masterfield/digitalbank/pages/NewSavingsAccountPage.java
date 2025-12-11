@@ -7,6 +7,11 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class NewSavingsAccountPage extends BasePage {
     
+    private WebElement accountNameField;
+    private WebElement initialDepositField;
+    private WebElement submitButton;
+    private WebElement resetButton;
+    
     public NewSavingsAccountPage(WebDriver driver) {
         super(driver);
     }
@@ -15,10 +20,18 @@ public class NewSavingsAccountPage extends BasePage {
         try {
             wait.until(ExpectedConditions.urlContains("savings-add"));
             wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("input[type='radio']")));
+            initElements();
             return true;
         } catch (Exception e) {
             return false;
         }
+    }
+    
+    private void initElements() {
+        accountNameField = driver.findElement(By.cssSelector("input[type='text'][id*='account' i], input[id*='name' i]"));
+        initialDepositField = driver.findElement(By.cssSelector("#openingBalance"));
+        submitButton = driver.findElement(By.cssSelector("#newSavingsSubmit"));
+        resetButton = driver.findElement(By.cssSelector("button[type='reset']"));
     }
     
     public void selectAccountType(String accountType) {
@@ -40,42 +53,29 @@ public class NewSavingsAccountPage extends BasePage {
     }
     
     public void enterAccountName(String accountName) {
-        WebElement field = wait.until(ExpectedConditions.visibilityOfElementLocated(
-            By.cssSelector("input[type='text'][id*='account' i], input[id*='name' i]")
-        ));
-        field.clear();
-        field.sendKeys(accountName);
+        wait.until(ExpectedConditions.visibilityOf(accountNameField));
+        accountNameField.clear();
+        accountNameField.sendKeys(accountName);
     }
     
     public void enterInitialDeposit(String amount) {
-        WebElement field = wait.until(ExpectedConditions.visibilityOfElementLocated(
-            By.cssSelector("#openingBalance")
-        ));
-        field.clear();
-        field.sendKeys(amount);
+        wait.until(ExpectedConditions.visibilityOf(initialDepositField));
+        initialDepositField.clear();
+        initialDepositField.sendKeys(amount);
     }
     
     public void submitForm() {
-        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(
-            By.cssSelector("#newSavingsSubmit")
-        ));
-        button.click();
+        wait.until(ExpectedConditions.elementToBeClickable(submitButton));
+        submitButton.click();
     }
     
     public void resetForm() {
-        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(
-            By.cssSelector("button[type='reset']")
-        ));
-        button.click();
+        wait.until(ExpectedConditions.elementToBeClickable(resetButton));
+        resetButton.click();
     }
     
     public boolean areAllFieldsCleared() {
-        WebElement accountNameField = wait.until(ExpectedConditions.visibilityOfElementLocated(
-            By.cssSelector("input[type='text'][id*='account' i], input[id*='name' i]")
-        ));
-        WebElement initialDepositField = wait.until(ExpectedConditions.visibilityOfElementLocated(
-            By.cssSelector("#openingBalance")
-        ));
+        wait.until(ExpectedConditions.visibilityOf(accountNameField));
         
         String accountName = accountNameField.getAttribute("value");
         String initialDeposit = initialDepositField.getAttribute("value");
