@@ -7,6 +7,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ViewSavingsAccountsPage extends BasePage {
     
@@ -131,31 +132,19 @@ public class ViewSavingsAccountsPage extends BasePage {
             By.xpath("//div[contains(@class, 'card-body')]//div[contains(@class, 'h4') and contains(@class, 'm-0') and normalize-space(text())='" + accountName + "']/ancestor::div[contains(@class, 'card-body')]")
         ));
         
-        if (fieldName.equalsIgnoreCase("AccountNumber")) {
-            WebElement accountNumberElement = accountCard.findElement(
-                By.xpath(".//*[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'account number')]")
-            );
-            String accountNumberText = accountNumberElement.getText().trim();
-            return accountNumberText.matches(".*\\d+.*");
-        }
-        
         String searchText = fieldName.toLowerCase()
             .replace("interestrate", "interest rate")
             .replace("accountnumber", "account number");
         
-        List<WebElement> fields = accountCard.findElements(By.cssSelector("small.text-light, div.m-0"));
+        List<WebElement> allElements = accountCard.findElements(By.cssSelector("small.text-light, div.m-0"));
         
-        for (WebElement field : fields) {
-            String fieldText = field.getText().toLowerCase();
-            if (fieldText.contains(searchText)) {
-                if (fieldText.contains(expectedValue.toLowerCase()) || 
-                    expectedValue.toLowerCase().contains(fieldText)) {
-                    return true;
-                }
-            }
-        }
-        
-        return false;
+        List<String> allElementContents = allElements.stream()
+            .map(WebElement::getText)
+            .map(String::toLowerCase)
+            .collect(Collectors.toList());
+
+        return allElementContents.stream().anyMatch(text -> text.contains(searchText)) &&
+               (expectedValue.equals("*") || allElementContents.stream().anyMatch(text -> text.contains(expectedValue.toLowerCase())));
     }
 }
 

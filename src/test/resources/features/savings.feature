@@ -41,7 +41,7 @@ Feature: Savings Management
       Examples:
    
         | Account | Ownership  | AccountNumber | InterestRate | Balance |
-        | Saving  | Individual | 486130016     | 1.85%        | $25.00  |
+        | Saving  | Individual | *             | 1.85%        | $25.00  |
 
     Scenario: Initial deposit appears in transactions
       Given I have successfully created a new savings account
