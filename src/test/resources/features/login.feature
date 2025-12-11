@@ -11,7 +11,7 @@ Feature: Login and Logout
     
     Scenario Outline: Unsuccessful login with incorrect password
       When I login with "<username>" and "<password>"
-      Then I see a message "Hiba Hibás belépési adatok vagy a hozzáférés nem engedélyezett a felhasználói fiók státusza, vagy létező felhasználó munkamenet miatt."
+      Then I see a message "Error Invalid credentials or access not granted due to user account status or an existing user session."
       And I am on the "login" page
 
       Examples:
@@ -36,4 +36,4 @@ Feature: Login and Logout
       Given I am logged in
       When I log out
       Then I am redirected to the "login" page
-      And I see a message "Sikeres kilépés."
+      And I see a message "Success Logout completed."

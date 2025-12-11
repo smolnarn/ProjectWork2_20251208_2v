@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class HomePage extends BasePage {
     
-    @FindBy(css = "h2, .welcome-text, .user-greeting, .dashboard h2")
+    @FindBy(xpath = "//h2[contains(text(),'Welcome')] | //*[contains(@class,'welcome') or contains(text(),'Welcome')]")
     private WebElement welcomeMessage;
     
     @FindBy(css = "aside, .sidebar, nav.sidebar")
@@ -16,11 +16,14 @@ public class HomePage extends BasePage {
     @FindBy(css = ".alert-success, .alert.alert-success, div[role='alert'].alert-success")
     private WebElement successMessage;
     
-    @FindBy(css = "a[href='/bank/logout'], a[href*='logout']")
+    @FindBy(xpath = "//a[contains(text(),'Logout')]")
     private WebElement logoutButton;
     
-    @FindBy(css = ".dropdown-toggle, .user-panel img, img[alt='User Avatar']")
+    @FindBy(css = "img[alt='User Avatar']")
     private WebElement userMenu;
+    
+    @FindBy(css = ".dropdown-menu, .user-menu")
+    private WebElement dropdownMenu;
     
     public HomePage(WebDriver driver) {
         super(driver);
@@ -73,22 +76,17 @@ public class HomePage extends BasePage {
 
 
     public void clickUserMenu() {
-        try {
-            wait.until(ExpectedConditions.elementToBeClickable(userMenu));
-            userMenu.click();
-        } catch (Exception e) {
-        }
+        wait.until(ExpectedConditions.elementToBeClickable(userMenu));
+        userMenu.click();
+        wait.until(ExpectedConditions.or(
+            ExpectedConditions.visibilityOf(dropdownMenu),
+            ExpectedConditions.elementToBeClickable(logoutButton)
+        ));
     }
 
 
     public void clickLogout() {
-        try {
-        
-            clickUserMenu();
-        } catch (Exception e) {
-          
-        }
-        
+        clickUserMenu();
         wait.until(ExpectedConditions.elementToBeClickable(logoutButton));
         logoutButton.click();
     }
