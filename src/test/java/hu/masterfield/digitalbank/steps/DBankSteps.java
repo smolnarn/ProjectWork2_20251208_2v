@@ -3,6 +3,9 @@ package hu.masterfield.digitalbank.steps;
 import hu.masterfield.digitalbank.pages.CookieBannerPage;
 import hu.masterfield.digitalbank.pages.HomePage;
 import hu.masterfield.digitalbank.pages.LoginPage;
+import hu.masterfield.digitalbank.pages.NewSavingsAccountPage;
+import hu.masterfield.digitalbank.pages.ViewSavingsAccountsPage;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
@@ -27,7 +30,10 @@ public class DBankSteps {
     protected static CookieBannerPage cookieBannerPage = null;
     protected static LoginPage loginPage = null;
     protected static HomePage homePage = null;
+    protected static NewSavingsAccountPage newSavingsAccountPage = null;
+    protected static ViewSavingsAccountsPage viewSavingsAccountsPage = null;
     private static Scenario scenario = null;
+    private static String currentAccountName = null;
 
     @Before
     public void setup(Scenario scenario) throws IOException {
@@ -53,6 +59,8 @@ public class DBankSteps {
         cookieBannerPage = new CookieBannerPage(driver);
         loginPage = new LoginPage(driver);
         homePage = new HomePage(driver);
+        newSavingsAccountPage = new NewSavingsAccountPage(driver);
+        viewSavingsAccountsPage = new ViewSavingsAccountsPage(driver);
     }
 
     protected String getPageUrl(String pageName) {
@@ -112,11 +120,22 @@ public class DBankSteps {
                 "Expected message: '" + expectedMessage + "' but got: '" + actualMessage + "'");
     }
 
-    @Then("I am on the {string} page")
+    @Given("I am on the {string} page")
     public void iAmOnThePage(String pageName) {
         if (pageName.equals("Áttekintés") || pageName.equals("Overview") || pageName.equals("Dashboard") || pageName.equals("Home")) {
+            if (!homePage.isOnHomePage()) {
+                driver.get("https://eng.digitalbank.masterfield.hu/bank/home");
+            }
             assertTrue(homePage.isOnHomePage(), 
                     "Should be on the Home/Dashboard page");
+        } else if (pageName.equals("New Saving")) {
+            driver.get("https://eng.digitalbank.masterfield.hu/bank/account/savings-add");
+            assertTrue(newSavingsAccountPage.isLoaded(), 
+                    "Should be on the New Savings Account page");
+        } else if (pageName.equals("View Saving")) {
+            driver.get("https://eng.digitalbank.masterfield.hu/bank/account/savings-view");
+            assertTrue(viewSavingsAccountsPage.isLoaded(), 
+                    "Should be on the View Savings Accounts page");
         } else {
             String currentUrl = driver.getCurrentUrl();
             assertTrue(currentUrl.contains("/" + pageName),
@@ -194,5 +213,113 @@ public class DBankSteps {
         assertTrue(homePage.isChartVisible(chartName), 
                 "Chart should be visible: " + chartName);
         takeScreenshot("Chart visible: " + chartName);
+    }
+    
+    @And("I fill out the form with data")
+    public void iFillOutTheFormWithData() {
+        newSavingsAccountPage.fillFormWithTestData();
+        takeScreenshot("Form filled with test data");
+    }
+    
+    @When("I reset the form")
+    public void iResetTheForm() {
+        newSavingsAccountPage.resetForm();
+        takeScreenshot("Form reset");
+    }
+    
+    @Then("all fields are cleared")
+    public void allFieldsAreCleared() {
+        assertTrue(newSavingsAccountPage.areAllFieldsCleared(), 
+                "All form fields should be cleared after reset");
+        takeScreenshot("All fields cleared");
+    }
+    
+    @When("I select {string} from {string} options")
+    public void iSelectFromOptions(String value, String fieldName) {
+        if (fieldName.equals("account type")) {
+            newSavingsAccountPage.selectAccountType(value);
+        } else if (fieldName.equals("ownership")) {
+            newSavingsAccountPage.selectOwnership(value);
+        }
+        takeScreenshot("Selected " + value + " from " + fieldName);
+    }
+    
+    @And("I enter {string} into {string} field")
+    public void iEnterIntoField(String value, String fieldName) {
+        if (fieldName.equals("account name")) {
+            newSavingsAccountPage.enterAccountName(value);
+        } else if (fieldName.equals("initial deposit")) {
+            newSavingsAccountPage.enterInitialDeposit(value);
+        }
+        takeScreenshot("Entered " + value + " into " + fieldName);
+    }
+    
+    @And("I submit the form")
+    public void iSubmitTheForm() {
+        newSavingsAccountPage.submitForm();
+        takeScreenshot("Form submitted");
+    }
+    
+    @Then("I see the {string} message")
+    public void iSeeTheMessage(String messageType) {
+        String message = "";
+        
+        if (messageType.equals("success")) {
+            if (viewSavingsAccountsPage.isLoaded()) {
+                message = viewSavingsAccountsPage.getSuccessMessage();
+            }
+            if (message.isEmpty() && homePage.isOnHomePage()) {
+                message = homePage.getSuccessMessage();
+            }
+            assertTrue(!message.isEmpty(), 
+                    "Success message should be displayed");
+        } else if (messageType.equals("error")) {
+            message = newSavingsAccountPage.getErrorMessage();
+            assertTrue(!message.isEmpty(), 
+                    "Error message should be displayed");
+        }
+        
+        takeScreenshot("Message displayed: " + messageType);
+    }
+    
+    @Given("I have successfully created a new savings account")
+    public void iHaveSuccessfullyCreatedANewSavingsAccount() {
+        driver.get("https://eng.digitalbank.masterfield.hu/bank/account/savings-add");
+        assertTrue(newSavingsAccountPage.isLoaded(), 
+                "Should be on the New Savings Account page");
+        
+        newSavingsAccountPage.selectAccountType("Saving");
+        newSavingsAccountPage.selectOwnership("Individual");
+        newSavingsAccountPage.enterAccountName("Test Savings");
+        newSavingsAccountPage.enterInitialDeposit("25");
+        newSavingsAccountPage.submitForm();
+        
+        takeScreenshot("Created new savings account");
+    }
+    
+    @Then("I see the following data on a green card:")
+    public void iSeeTheFollowingDataOnAGreenCard(DataTable dataTable) {
+        assertTrue(viewSavingsAccountsPage.isGreenCardVisible(), 
+                "Green card should be visible");
+        
+        var rows = dataTable.asMaps(String.class, String.class);
+        
+        for (var row : rows) {
+            String field = row.get("Field");
+            String expectedValue = row.get("Value");
+            
+            assertTrue(viewSavingsAccountsPage.verifyCardData(field, expectedValue),
+                    "Field '" + field + "' should contain value: " + expectedValue);
+        }
+        
+        takeScreenshot("Verified green card data");
+    }
+    
+    @Then("I see the initial deposit in the transactions with the correct amount")
+    public void iSeeTheInitialDepositInTheTransactionsWithTheCorrectAmount() {
+        assertTrue(viewSavingsAccountsPage.isInitialDepositInTransactions("$25.00") || 
+                   viewSavingsAccountsPage.isInitialDepositInTransactions("25"),
+                "Initial deposit should be visible in transactions");
+        takeScreenshot("Initial deposit visible in transactions");
     }
 }

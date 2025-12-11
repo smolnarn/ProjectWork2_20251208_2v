@@ -8,9 +8,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class CookieBannerPage extends BasePage {
 
-    //@FindBy(css = ".cc-nb-okagree")
-    //WebElement okButton;
-
     @FindBy(className = "cc-nb-main-container")
     private WebElement cookieBanner;
     
