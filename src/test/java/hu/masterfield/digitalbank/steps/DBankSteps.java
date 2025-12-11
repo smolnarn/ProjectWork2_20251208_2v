@@ -247,7 +247,8 @@ public class DBankSteps {
     @And("I enter {string} into {string} field")
     public void iEnterIntoField(String value, String fieldName) {
         if (fieldName.equals("account name")) {
-            newSavingsAccountPage.enterAccountName(value);
+            currentAccountName = value + "_" + System.currentTimeMillis();
+            newSavingsAccountPage.enterAccountName(currentAccountName);
         } else if (fieldName.equals("initial deposit")) {
             newSavingsAccountPage.enterInitialDeposit(value);
         }
@@ -288,9 +289,10 @@ public class DBankSteps {
         assertTrue(newSavingsAccountPage.isLoaded(), 
                 "Should be on the New Savings Account page");
         
+        currentAccountName = "Test Savings_" + System.currentTimeMillis();
         newSavingsAccountPage.selectAccountType("Saving");
         newSavingsAccountPage.selectOwnership("Individual");
-        newSavingsAccountPage.enterAccountName("Test Savings");
+        newSavingsAccountPage.enterAccountName(currentAccountName);
         newSavingsAccountPage.enterInitialDeposit("25");
         newSavingsAccountPage.submitForm();
         
@@ -299,8 +301,8 @@ public class DBankSteps {
     
     @Then("I see the following data on a green card:")
     public void iSeeTheFollowingDataOnAGreenCard(DataTable dataTable) {
-        assertTrue(viewSavingsAccountsPage.isGreenCardVisible(), 
-                "Green card should be visible");
+        assertTrue(viewSavingsAccountsPage.isAccountVisible(currentAccountName), 
+                "Green card should be visible for account: " + currentAccountName);
         
         var rows = dataTable.asMaps(String.class, String.class);
         
@@ -308,8 +310,8 @@ public class DBankSteps {
             String field = row.get("Field");
             String expectedValue = row.get("Value");
             
-            assertTrue(viewSavingsAccountsPage.verifyCardData(field, expectedValue),
-                    "Field '" + field + "' should contain value: " + expectedValue);
+            assertTrue(viewSavingsAccountsPage.verifyCardDataForAccount(currentAccountName, field, expectedValue),
+                    "Field '" + field + "' should contain value: " + expectedValue + " for account: " + currentAccountName);
         }
         
         takeScreenshot("Verified green card data");

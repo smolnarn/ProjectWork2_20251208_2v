@@ -118,5 +118,44 @@ public class ViewSavingsAccountsPage extends BasePage {
         ));
         return message.getText();
     }
+    
+    public boolean isAccountVisible(String accountName) {
+        WebElement accountHeader = wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//div[contains(@class, 'card-body')]//div[contains(@class, 'h4') and contains(@class, 'm-0') and normalize-space(text())='" + accountName + "']")
+        ));
+        return accountHeader.isDisplayed();
+    }
+    
+    public boolean verifyCardDataForAccount(String accountName, String fieldName, String expectedValue) {
+        WebElement accountCard = wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//div[contains(@class, 'card-body')]//div[contains(@class, 'h4') and contains(@class, 'm-0') and normalize-space(text())='" + accountName + "']/ancestor::div[contains(@class, 'card-body')]")
+        ));
+        
+        if (fieldName.equalsIgnoreCase("AccountNumber")) {
+            WebElement accountNumberElement = accountCard.findElement(
+                By.xpath(".//*[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'account number')]")
+            );
+            String accountNumberText = accountNumberElement.getText().trim();
+            return accountNumberText.matches(".*\\d+.*");
+        }
+        
+        String searchText = fieldName.toLowerCase()
+            .replace("interestrate", "interest rate")
+            .replace("accountnumber", "account number");
+        
+        List<WebElement> fields = accountCard.findElements(By.cssSelector("small.text-light, div.m-0"));
+        
+        for (WebElement field : fields) {
+            String fieldText = field.getText().toLowerCase();
+            if (fieldText.contains(searchText)) {
+                if (fieldText.contains(expectedValue.toLowerCase()) || 
+                    expectedValue.toLowerCase().contains(fieldText)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
 }
 
