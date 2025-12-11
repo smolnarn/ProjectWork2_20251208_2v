@@ -114,11 +114,15 @@ public class DBankSteps {
 
     @Then("I am on the {string} page")
     public void iAmOnThePage(String pageName) {
-        String currentUrl = driver.getCurrentUrl();
-        takeScreenshot("Current page: " + pageName);
-        
-        assertTrue(currentUrl.contains("/" + pageName),
-                "Expected to be on '" + pageName + "' page, but URL is: " + currentUrl);
+        if (pageName.equals("Áttekintés") || pageName.equals("Overview") || pageName.equals("Dashboard") || pageName.equals("Home")) {
+            assertTrue(homePage.isOnHomePage(), 
+                    "Should be on the Home/Dashboard page");
+        } else {
+            String currentUrl = driver.getCurrentUrl();
+            assertTrue(currentUrl.contains("/" + pageName),
+                    "Expected to be on '" + pageName + "' page, but URL is: " + currentUrl);
+        }
+        takeScreenshot("On page: " + pageName);
     }
 
     @And("I see the welcome message")
@@ -183,5 +187,12 @@ public class DBankSteps {
         assertTrue(cookieBannerPage.isCookieBannerDisappeared(), 
                 "A cookie banner-nek el kellene tűnnie az elfogadás után");
         takeScreenshot("Cookie banner disappeared");
+    }
+    
+    @Then("I see the chart {string}")
+    public void iSeeTheChart(String chartName) {
+        assertTrue(homePage.isChartVisible(chartName), 
+                "Chart should be visible: " + chartName);
+        takeScreenshot("Chart visible: " + chartName);
     }
 }

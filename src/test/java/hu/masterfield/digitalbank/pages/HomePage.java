@@ -1,9 +1,12 @@
 package hu.masterfield.digitalbank.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import java.util.List;
 
 public class HomePage extends BasePage {
     
@@ -24,6 +27,15 @@ public class HomePage extends BasePage {
     
     @FindBy(css = ".dropdown-menu, .user-menu")
     private WebElement dropdownMenu;
+    
+    @FindBy(xpath = "//h2[@class='card-title'] | //h5[@class='card-title'] | //*[contains(@class,'card-title')]")
+    private List<WebElement> chartTitles;
+    
+    @FindBy(css = ".card, .chart-container, .chart-card")
+    private List<WebElement> chartContainers;
+    
+    @FindBy(css = "canvas")
+    private List<WebElement> charts;
     
     public HomePage(WebDriver driver) {
         super(driver);
@@ -98,6 +110,36 @@ public class HomePage extends BasePage {
             return successMessage.getText();
         } catch (Exception e) {
             return "";
+        }
+    }
+    
+    public boolean isChartVisible(String chartName) {
+        try {
+            WebElement chartElement = wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath(String.format("//*[contains(text(),'%s')]", chartName))
+            ));
+            return chartElement.isDisplayed();
+        } catch (Exception e) {
+            System.out.println("Chart not found: " + chartName + ". Error: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    public int getVisibleChartsCount() {
+        try {
+            wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(
+                By.cssSelector("canvas, .chart-container, [class*='chart']")
+            ));
+            
+            int count = 0;
+            for (WebElement chart : charts) {
+                if (chart.isDisplayed()) {
+                    count++;
+                }
+            }
+            return count;
+        } catch (Exception e) {
+            return 0;
         }
     }
 }
