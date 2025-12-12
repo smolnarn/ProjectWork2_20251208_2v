@@ -340,26 +340,6 @@ public class DBankSteps {
         takeScreenshot("Verified green card data");
     }
     
-    @Then("I see account {string} with ownership {string}, account number {string}, interest rate {string} and balance {string} on a green card")
-    public void iSeeAccountWithOwnershipAccountNumberInterestRateAndBalanceOnAGreenCard(
-            String account, String ownership, String accountNumber, String interestRate, String balance) {
-        assertTrue(viewSavingsAccountsPage.isAccountVisible(currentAccountName), 
-                "Green card should be visible for account: " + currentAccountName);
-        
-        assertTrue(viewSavingsAccountsPage.verifyCardDataForAccount(currentAccountName, "Account", account),
-                "Account field should contain: " + account);
-        assertTrue(viewSavingsAccountsPage.verifyCardDataForAccount(currentAccountName, "Ownership", ownership),
-                "Ownership field should contain: " + ownership);
-        assertTrue(viewSavingsAccountsPage.verifyCardDataForAccount(currentAccountName, "AccountNumber", accountNumber),
-                "AccountNumber field should match pattern: " + accountNumber);
-        assertTrue(viewSavingsAccountsPage.verifyCardDataForAccount(currentAccountName, "InterestRate", interestRate),
-                "InterestRate field should contain: " + interestRate);
-        assertTrue(viewSavingsAccountsPage.verifyCardDataForAccount(currentAccountName, "Balance", balance),
-                "Balance field should contain: " + balance);
-        
-        takeScreenshot("Verified green card data with parameters");
-    }
-    
     @Then("I see the initial deposit in the transactions with the correct amount")
     public void iSeeTheInitialDepositInTheTransactionsWithTheCorrectAmount() {
         assertTrue(viewSavingsAccountsPage.isInitialDepositInTransactions("$25.00") || 
