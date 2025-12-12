@@ -39,7 +39,7 @@ public class DBankSteps {
     public void setup(Scenario scenario) throws IOException {
         DBankSteps.scenario = scenario;
         
-        WebDriverManager.chromedriver().clearDriverCache().setup();
+        WebDriverManager.chromedriver().setup();
 
         ChromeOptions options = new ChromeOptions();
 
