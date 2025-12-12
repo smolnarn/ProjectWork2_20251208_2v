@@ -261,6 +261,18 @@ public class DBankSteps {
         takeScreenshot("Form submitted");
     }
     
+    @When("I create a new saving account with account type {string}, ownership {string}, account name {string} and initial deposit {string}")
+    public void iCreateANewSavingAccountWithAccountTypeOwnershipAccountNameAndInitialDeposit(
+            String accountType, String ownership, String accountName, String initialDeposit) {
+        currentAccountName = accountName + "_" + System.currentTimeMillis();
+        newSavingsAccountPage.selectAccountType(accountType);
+        newSavingsAccountPage.selectOwnership(ownership);
+        newSavingsAccountPage.enterAccountName(currentAccountName);
+        newSavingsAccountPage.enterInitialDeposit(initialDeposit);
+        newSavingsAccountPage.submitForm();
+        takeScreenshot("Created new saving account with parameters");
+    }
+    
     @Then("I see the {string} message")
     public void iSeeTheMessage(String messageType) {
         String message = "";
@@ -307,14 +319,45 @@ public class DBankSteps {
         var rows = dataTable.asMaps(String.class, String.class);
         
         for (var row : rows) {
-            String field = row.get("Field");
-            String expectedValue = row.get("Value");
+            String account = row.get("Account");
+            String ownership = row.get("Ownership");
+            String accountNumber = row.get("AccountNumber");
+            String interestRate = row.get("InterestRate");
+            String balance = row.get("Balance");
             
-            assertTrue(viewSavingsAccountsPage.verifyCardDataForAccount(currentAccountName, field, expectedValue),
-                    "Field '" + field + "' should contain value: " + expectedValue + " for account: " + currentAccountName);
+            assertTrue(viewSavingsAccountsPage.verifyCardDataForAccount(currentAccountName, "Account", account),
+                    "Account field should contain: " + account);
+            assertTrue(viewSavingsAccountsPage.verifyCardDataForAccount(currentAccountName, "Ownership", ownership),
+                    "Ownership field should contain: " + ownership);
+            assertTrue(viewSavingsAccountsPage.verifyCardDataForAccount(currentAccountName, "AccountNumber", accountNumber),
+                    "AccountNumber field should match pattern: " + accountNumber);
+            assertTrue(viewSavingsAccountsPage.verifyCardDataForAccount(currentAccountName, "InterestRate", interestRate),
+                    "InterestRate field should contain: " + interestRate);
+            assertTrue(viewSavingsAccountsPage.verifyCardDataForAccount(currentAccountName, "Balance", balance),
+                    "Balance field should contain: " + balance);
         }
         
         takeScreenshot("Verified green card data");
+    }
+    
+    @Then("I see account {string} with ownership {string}, account number {string}, interest rate {string} and balance {string} on a green card")
+    public void iSeeAccountWithOwnershipAccountNumberInterestRateAndBalanceOnAGreenCard(
+            String account, String ownership, String accountNumber, String interestRate, String balance) {
+        assertTrue(viewSavingsAccountsPage.isAccountVisible(currentAccountName), 
+                "Green card should be visible for account: " + currentAccountName);
+        
+        assertTrue(viewSavingsAccountsPage.verifyCardDataForAccount(currentAccountName, "Account", account),
+                "Account field should contain: " + account);
+        assertTrue(viewSavingsAccountsPage.verifyCardDataForAccount(currentAccountName, "Ownership", ownership),
+                "Ownership field should contain: " + ownership);
+        assertTrue(viewSavingsAccountsPage.verifyCardDataForAccount(currentAccountName, "AccountNumber", accountNumber),
+                "AccountNumber field should match pattern: " + accountNumber);
+        assertTrue(viewSavingsAccountsPage.verifyCardDataForAccount(currentAccountName, "InterestRate", interestRate),
+                "InterestRate field should contain: " + interestRate);
+        assertTrue(viewSavingsAccountsPage.verifyCardDataForAccount(currentAccountName, "Balance", balance),
+                "Balance field should contain: " + balance);
+        
+        takeScreenshot("Verified green card data with parameters");
     }
     
     @Then("I see the initial deposit in the transactions with the correct amount")
